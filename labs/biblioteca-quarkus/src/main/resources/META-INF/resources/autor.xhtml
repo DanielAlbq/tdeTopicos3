@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+<f:metadata>
+    <f:viewParam name="id" value="#{autorBean.autorId}" />
+    <f:viewAction action="#{autorBean.carregar}" />
+</f:metadata>
+
+<h:head>
+    <title>#{empty autorBean.autor.id ? 'Novo Autor' : 'Editar Autor'}</title>
+    <h:outputStylesheet name="css/style.css" />
+</h:head>
+
+<h:body>
+    <div class="container">
+        <header>
+            <h1>#{empty autorBean.autor.id ? '📝 Cadastro de Autor' : '✏️ Edição de Autor'}</h1>
+        </header>
+
+        <div class="data-section">
+            <h:form>
+                <h:messages id="messages" globalOnly="true" styleClass="faces-message" />
+
+                <h:panelGrid columns="3" styleClass="form-grid" columnClasses=",,error-message">
+
+                    <h:outputLabel for="nome" value="Nome:" styleClass="ui-outputlabel" />
+                    <h:inputText id="nome" value="#{autorBean.autor.nome}"
+                                 required="true" requiredMessage="O nome é obrigatório."
+                                 styleClass="form-input"/>
+                    <h:message for="nome" />
+
+                    <h:outputLabel for="email" value="Email:" styleClass="ui-outputlabel" />
+                    <h:inputText id="email" value="#{autorBean.autor.email}" styleClass="form-input"/>
+                    <h:message for="email" />
+
+                    <h:outputLabel for="nascimento" value="Data de Nascimento:" styleClass="ui-outputlabel" />
+                    <h:inputText id="nascimento" value="#{autorBean.autor.dataNascimento}"
+                                 placeholder="yyyy-MM-dd" styleClass="form-input">
+                        <f:convertDateTime type="localDate" pattern="yyyy-MM-dd" />
+                    </h:inputText>
+                    <h:message for="nascimento" />
+
+                    <h:outputLabel for="biografia" value="Biografia:" styleClass="ui-outputlabel" />
+                    <h:inputTextarea id="biografia" value="#{autorBean.autor.biografia}"
+                                     rows="5" styleClass="form-textarea"/>
+                    <h:message for="biografia" />
+
+                </h:panelGrid>
+
+                <div class="form-actions">
+                    <h:commandButton value="Salvar" action="#{autorBean.salvar}" styleClass="button button-primary" />
+                    <h:link outcome="/index" value="Cancelar" styleClass="button button-secondary" />
+                </div>
+            </h:form>
+        </div>
+    </div>
+</h:body>
+</html>

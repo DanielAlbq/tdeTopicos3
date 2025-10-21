@@ -1,7 +1,7 @@
 package com.biblioteca.entity;
 
 import jakarta.persistence.*;
-
+import java.util.Objects;
 import java.time.LocalDate;
 
 @Entity
@@ -94,5 +94,18 @@ public class Emprestimo {
 
     public void setLivro(Livro livro) {
         this.livro = livro;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Emprestimo that = (Emprestimo) o;
+        return id != null && id.equals(that.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return getClass().hashCode();
     }
 }

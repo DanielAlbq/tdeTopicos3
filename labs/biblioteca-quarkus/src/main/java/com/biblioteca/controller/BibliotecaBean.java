@@ -6,6 +6,8 @@ import com.biblioteca.entity.Livro;
 import com.biblioteca.service.BibliotecaService;
 
 import jakarta.annotation.PostConstruct;
+import jakarta.faces.application.FacesMessage;
+import jakarta.faces.context.FacesContext;
 import jakarta.faces.view.ViewScoped;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
@@ -93,5 +95,25 @@ public class BibliotecaBean implements Serializable {
 
     public long getTotalAutores() {
         return totalAutores;
+    }
+
+    public void excluirAutor(Long id) {
+        bibliotecaService.excluirAutor(id);
+        carregarDados(); // Recarrega a lista
+    }
+
+    public void excluirLivro(Long id) {
+        try {
+            bibliotecaService.excluirLivro(id);
+            // Recarrega todos os dados para atualizar a interface
+            carregarDados();
+            // Adiciona uma mensagem de sucesso
+            FacesContext.getCurrentInstance().addMessage(null,
+                    new FacesMessage(FacesMessage.SEVERITY_INFO, "Sucesso", "Livro excluído."));
+        } catch (Exception e) {
+            // Adiciona uma mensagem de erro (ex: se o livro tiver empréstimos ativos)
+            FacesContext.getCurrentInstance().addMessage(null,
+                    new FacesMessage(FacesMessage.SEVERITY_ERROR, "Erro", "Não foi possível excluir o livro."));
+        }
     }
 }

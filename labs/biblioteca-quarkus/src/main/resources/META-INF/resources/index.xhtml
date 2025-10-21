@@ -2,7 +2,8 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="http://xmlns.jcp.org/jsf/html"
       xmlns:f="http://xmlns.jcp.org/jsf/core"
-      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui">
 <h:head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -97,6 +98,31 @@
             color: #dc3545;
             font-weight: bold;
         }
+
+        .botao-acao {
+            margin-left: 8px;
+        }
+
+        .button {
+            text-decoration: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            border: none;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            font-size: 1em;
+            margin-left: 10px;
+        }
+
+        .button-primary {
+            background-color: #007bff;
+        }
+
+        .button-primary:hover {
+            background-color: #0056b3;
+        }
     </style>
 </h:head>
 <h:body>
@@ -128,51 +154,79 @@
         <h:form>
             <div class="data-section">
                 <h2>Autores Cadastrados</h2>
-                <table>
-                    <thead>
-                    <tr>
-                        <th>Nome</th>
-                        <th>Email</th>
-                        <th>Quantidade de Livros</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <ui:repeat value="#{bibliotecaBean.autores}" var="autor">
-                        <tr>
-                            <td>#{autor.nome}</td>
-                            <td>#{autor.email}</td>
-                            <td>#{autor.quantidadeLivros}</td>
-                        </tr>
-                    </ui:repeat>
-                    </tbody>
-                </table>
+                <div style="margin-bottom: 20px;">
+                    <h:link outcome="/autor" value="👤 Novo Autor" styleClass="button button-primary" />
+                </div>
+                <p:dataTable var="autor" value="#{bibliotecaBean.autores}"
+                             paginator="true" rows="10"
+                             paginatorPosition="top"  paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                             rowsPerPageTemplate="5,10,15"
+                             emptyMessage="Nenhum autor encontrado.">
+
+                    <p:column headerText="Nome" sortBy="#{autor.nome}" filterBy="#{autor.nome}" filterMatchMode="contains">
+                        <h:outputText value="#{autor.nome}" />
+                    </p:column>
+
+                    <p:column headerText="Email" sortBy="#{autor.email}" filterBy="#{autor.email}" filterMatchMode="contains">
+                        <h:outputText value="#{autor.email}" />
+                    </p:column>
+
+                    <p:column headerText="Livros">
+                        <h:outputText value="#{autor.livros.size()}" />
+                    </p:column>
+
+                    <p:column headerText="Ações" style="text-align:center;">
+                        <h:link value="Editar" outcome="/autor" styleClass="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only">
+                            <f:param name="id" value="#{autor.id}" />
+                        </h:link>
+
+                        &#160; <h:commandLink value="Excluir" action="#{bibliotecaBean.excluirAutor(autor.id)}"
+                                              onclick="return confirm('Tem certeza?');"
+                                              styleClass="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only botao-excluir" />
+                    </p:column>
+                </p:dataTable>
             </div>
 
             <div class="data-section">
                 <h2>Livros na Biblioteca</h2>
-                <table>
-                    <thead>
-                    <tr>
-                        <th>Título</th>
-                        <th>Autor</th>
-                        <th>ISBN</th>
-                        <th>Status</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <ui:repeat value="#{bibliotecaBean.livros}" var="livro">
-                        <tr>
-                            <td>#{livro.titulo}</td>
-                            <td>#{livro.autor.nome}</td>
-                            <td>#{livro.isbn}</td>
-                            <td>
-                                <h:outputText value="Disponível" styleClass="status-disponivel" rendered="#{livro.disponivel}" />
-                                <h:outputText value="Emprestado" styleClass="status-emprestado" rendered="#{!livro.disponivel}" />
-                            </td>
-                        </tr>
-                    </ui:repeat>
-                    </tbody>
-                </table>
+                <div style="margin-bottom: 20px;">
+                    <h:link outcome="/livro" value="📚 Novo Livro" styleClass="button button-primary" />
+                </div>
+                <p:dataTable var="livro" value="#{bibliotecaBean.livros}"
+                             paginator="true" rows="10"
+                             paginatorPosition="top"
+                             paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                             rowsPerPageTemplate="5,10,15"
+                             emptyMessage="Nenhum livro encontrado.">
+
+                    <p:column headerText="Título" sortBy="#{livro.titulo}" filterBy="#{livro.titulo}" filterMatchMode="contains">
+                        <h:outputText value="#{livro.titulo}" />
+                    </p:column>
+
+                    <p:column headerText="Autor" sortBy="#{livro.autor.nome}" filterBy="#{livro.autor.nome}" filterMatchMode="contains">
+                        <h:outputText value="#{livro.autor.nome}" />
+                    </p:column>
+
+                    <p:column headerText="ISBN" filterBy="#{livro.isbn}" filterMatchMode="contains" style="width:180px;">
+                        <h:outputText value="#{livro.isbn}" />
+                    </p:column>
+
+                    <p:column headerText="Status" sortBy="#{livro.disponivel}" style="width:120px; text-align:center;">
+                        <h:outputText value="#{livro.disponivel ? 'Disponível' : 'Emprestado'}"
+                                      styleClass="#{livro.disponivel ? 'status-disponivel' : 'status-emprestado'}" />
+                    </p:column>
+
+                    <p:column headerText="Ações" style="width:150px; text-align:center;">
+                        <h:link value="Editar" outcome="/livro" styleClass="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only">
+                            <f:param name="id" value="#{livro.id}" />
+                        </h:link>
+
+                        &#160; <h:commandLink value="Excluir" action="#{bibliotecaBean.excluirLivro(livro.id)}"
+                                              onclick="return confirm('Tem certeza que deseja excluir este livro?');"
+                                              styleClass="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only botao-excluir" />
+                    </p:column>
+
+                </p:dataTable>
             </div>
 
             <div class="data-section">

@@ -1,7 +1,7 @@
 package com.biblioteca.entity;
 
 import jakarta.persistence.*;
-
+import java.util.Objects;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -107,4 +107,5 @@ public class Livro {
     public void setEmprestimos(List<Emprestimo> emprestimos) {
         this.emprestimos = emprestimos;
     }
+
 }

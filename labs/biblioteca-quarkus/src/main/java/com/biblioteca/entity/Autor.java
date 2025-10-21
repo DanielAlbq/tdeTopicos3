@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Entity
 @Table(name = "autores")
@@ -85,5 +86,20 @@ public class Autor {
 
     public int getQuantidadeLivros() {
         return this.livros != null ? this.livros.size() : 0;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Autor autor = (Autor) o;
+        // Dois autores são iguais se seus IDs não forem nulos e forem idênticos.
+        return id != null && id.equals(autor.id);
+    }
+
+    @Override
+    public int hashCode() {
+        // Usa a implementação da classe para consistência, especialmente quando o id é nulo.
+        return getClass().hashCode();
     }
 }

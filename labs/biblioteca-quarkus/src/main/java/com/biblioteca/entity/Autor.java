@@ -19,7 +19,7 @@ public class Autor {
     @Column(nullable = true, length = 150)
     private String email;
 
-    @Column(name = "dataNascimento")
+    @Column(name = "data_nascimento")
     private LocalDate dataNascimento;
 
     @Column(length = 500)

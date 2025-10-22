@@ -116,4 +116,17 @@ public class BibliotecaBean implements Serializable {
                     new FacesMessage(FacesMessage.SEVERITY_ERROR, "Erro", "Não foi possível excluir o livro."));
         }
     }
+
+    public void devolverLivro(Long emprestimoId) {
+        try {
+            bibliotecaService.devolverLivro(emprestimoId);
+            // Recarrega todos os dados para atualizar as listas
+            init();
+            FacesContext.getCurrentInstance().addMessage(null,
+                    new FacesMessage(FacesMessage.SEVERITY_INFO, "Sucesso", "Livro devolvido."));
+        } catch (Exception e) {
+            FacesContext.getCurrentInstance().addMessage(null,
+                    new FacesMessage(FacesMessage.SEVERITY_ERROR, "Erro", e.getMessage()));
+        }
+    }
 }

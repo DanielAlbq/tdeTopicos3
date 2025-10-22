@@ -4,6 +4,8 @@ import com.biblioteca.entity.*;
 import com.biblioteca.repository.*;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
+
+import java.time.LocalDate;
 import java.util.List;
 import jakarta.transaction.Transactional;
 import java.util.Optional;
@@ -87,5 +89,55 @@ public class BibliotecaService {
     @Transactional
     public void excluirLivro(Long id) {
         livroRepository.deleteById(id);
+    }
+
+    public List<Livro> listarLivrosDisponiveis() {
+        return livroRepository.findDisponiveis();
+    }
+
+    /**
+     * Cria um novo empréstimo e atualiza o status do livro para indisponível.
+     */
+    @Transactional
+    public void realizarEmprestimo(Emprestimo emprestimo) {
+        // 1. Busca o livro no banco para garantir que é uma entidade gerenciada
+        Livro livroParaEmprestar = livroRepository.findById(emprestimo.getLivro().getId())
+                .orElseThrow(() -> new IllegalArgumentException("Livro não encontrado."));
+
+        // 2. Regra de negócio: verifica se o livro está realmente disponível
+        if (!livroParaEmprestar.isDisponivel()) {
+            throw new IllegalStateException("Este livro já está emprestado.");
+        }
+
+        // 3. Define as datas do empréstimo
+        emprestimo.setDataEmprestimo(LocalDate.now());
+        emprestimo.setDataDevolucaoPrevista(LocalDate.now().plusDays(14)); // Ex: 14 dias de prazo
+        emprestimo.setDataDevolucao(null); // Garante que a data de devolução é nula
+
+        // 4. Atualiza o status do livro
+        livroParaEmprestar.setDisponivel(false);
+
+        // 5. Salva o novo empréstimo
+        emprestimoRepository.save(emprestimo);
+    }
+
+    /**
+     * Registra a devolução de um livro, atualizando o empréstimo e o status do livro.
+     */
+    @Transactional
+    public void devolverLivro(Long emprestimoId) {
+        Emprestimo emprestimo = emprestimoRepository.findById(emprestimoId)
+                .orElseThrow(() -> new IllegalArgumentException("Empréstimo não encontrado."));
+
+        // Regra de negócio: não devolver um livro que já foi devolvido
+        if (emprestimo.getDataDevolucao() != null) {
+            throw new IllegalStateException("Este livro já foi devolvido.");
+        }
+
+        // Atualiza o empréstimo
+        emprestimo.setDataDevolucao(LocalDate.now());
+
+        // Atualiza o status do livro para disponível
+        emprestimo.getLivro().setDisponivel(true);
     }
 }

@@ -47,4 +47,10 @@ public class LivroRepository {
     public void deleteById(Long id) {
         findById(id).ifPresent(entityManager::remove);
     }
+
+    public List<Livro> findDisponiveis() {
+        return entityManager.createQuery(
+                        "SELECT l FROM Livro l LEFT JOIN FETCH l.autor WHERE l.disponivel = true ORDER BY l.titulo", Livro.class)
+                .getResultList();
+    }
 }

@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+<h:head>
+    <title>Novo Empréstimo</title>
+    <h:outputStylesheet name="css/style.css" />
+</h:head>
+<h:body>
+    <div class="container">
+        <header><h1>🤝 Novo Empréstimo</h1></header>
+        <div class="data-section">
+            <h:form>
+                <h:messages globalOnly="true" styleClass="faces-message" infoClass="faces-message-info" errorClass="faces-message-error" />
+                <h:panelGrid columns="3" styleClass="form-grid" columnClasses=",,error-message">
+
+                    <h:outputLabel for="livro" value="Livro Disponível:" />
+                    <h:selectOneMenu id="livro" value="#{emprestimoBean.emprestimo.livro}" converter="#{livroConverter}" required="true" requiredMessage="Selecione um livro." styleClass="form-input">
+                        <f:selectItem itemLabel="Selecione um livro..." noSelectionOption="true" />
+                        <f:selectItems value="#{emprestimoBean.livrosDisponiveis}" var="livro" itemValue="#{livro}" itemLabel="#{livro.titulo} (#{livro.autor.nome})" />
+                    </h:selectOneMenu>
+                    <h:message for="livro" />
+
+                    <h:outputLabel for="nomeUsuario" value="Nome do Usuário:" />
+                    <h:inputText id="nomeUsuario" value="#{emprestimoBean.emprestimo.nomeUsuario}" required="true" requiredMessage="O nome é obrigatório." styleClass="form-input"/>
+                    <h:message for="nomeUsuario" />
+
+                    <h:outputLabel for="emailUsuario" value="Email do Usuário:" />
+                    <h:inputText id="emailUsuario" value="#{emprestimoBean.emprestimo.emailUsuario}" required="true" requiredMessage="O email é obrigatório." styleClass="form-input"/>
+                    <h:message for="emailUsuario" />
+                </h:panelGrid>
+                <div class="form-actions">
+                    <h:commandButton value="Confirmar Empréstimo" action="#{emprestimoBean.salvar}" styleClass="button button-primary" />
+                    <h:link outcome="/index" value="Cancelar" styleClass="button button-secondary" />
+                </div>
+            </h:form>
+        </div>
+    </div>
+</h:body>
+</html>

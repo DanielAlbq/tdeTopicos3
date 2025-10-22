@@ -231,34 +231,45 @@
 
             <div class="data-section">
                 <h2>Empréstimos Ativos</h2>
-                <table>
-                    <thead>
-                    <tr>
-                        <th>Usuário</th>
-                        <th>Livro</th>
-                        <th>Data do Empréstimo</th>
-                        <th>Devolução Prevista</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <ui:repeat value="#{bibliotecaBean.emprestimosAtivos}" var="emprestimo">
-                        <tr>
-                            <td>#{emprestimo.nomeUsuario}</td>
-                            <td>#{emprestimo.livro.titulo}</td>
-                            <td>
-                                <h:outputText value="#{emprestimo.dataEmprestimo}">
-                                    <f:convertDateTime pattern="dd/MM/yyyy" type="localDate" />
-                                </h:outputText>
-                            </td>
-                            <td>
-                                <h:outputText value="#{emprestimo.dataDevolucaoPrevista}">
-                                    <f:convertDateTime pattern="dd/MM/yyyy" type="localDate" />
-                                </h:outputText>
-                            </td>
-                        </tr>
-                    </ui:repeat>
-                    </tbody>
-                </table>
+
+                <div style="margin-bottom: 20px;">
+                    <h:link outcome="/emprestimo" value="🤝 Novo Empréstimo" styleClass="button button-primary" />
+                </div>
+
+                <p:dataTable var="emprestimo" value="#{bibliotecaBean.emprestimosAtivos}"
+                             paginator="true" rows="10"
+                             paginatorPosition="top"
+                             paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                             rowsPerPageTemplate="5,10,15"
+                             emptyMessage="Nenhum empréstimo ativo no momento.">
+
+                    <p:column headerText="Usuário" sortBy="#{emprestimo.nomeUsuario}" filterBy="#{emprestimo.nomeUsuario}" filterMatchMode="contains">
+                        <h:outputText value="#{emprestimo.nomeUsuario}" />
+                    </p:column>
+
+                    <p:column headerText="Livro" sortBy="#{emprestimo.livro.titulo}" filterBy="#{emprestimo.livro.titulo}" filterMatchMode="contains">
+                        <h:outputText value="#{emprestimo.livro.titulo}" />
+                    </p:column>
+
+                    <p:column headerText="Data do Empréstimo" sortBy="#{emprestimo.dataEmprestimo}" style="width:180px; text-align:center;">
+                        <h:outputText value="#{emprestimo.dataEmprestimo}">
+                            <f:convertDateTime pattern="dd/MM/yyyy" type="localDate" />
+                        </h:outputText>
+                    </p:column>
+
+                    <p:column headerText="Devolução Prevista" sortBy="#{emprestimo.dataDevolucaoPrevista}" style="width:180px; text-align:center;">
+                        <h:outputText value="#{emprestimo.dataDevolucaoPrevista}">
+                            <f:convertDateTime pattern="dd/MM/yyyy" type="localDate" />
+                        </h:outputText>
+                    </p:column>
+
+                    <p:column headerText="Ações" style="width:120px; text-align:center;">
+                        <h:commandButton value="Devolver"
+                                         action="#{bibliotecaBean.devolverLivro(emprestimo.id)}"
+                                         styleClass="button button-primary" />
+                    </p:column>
+
+                </p:dataTable>
             </div>
         </h:form>
     </div>

@@ -6,6 +6,7 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 
 import java.util.List;
+import java.util.Optional;
 
 @ApplicationScoped
 public class EmprestimoRepository {
@@ -29,4 +30,20 @@ public class EmprestimoRepository {
         return entityManager.createQuery("SELECT COUNT(e) FROM Emprestimo e WHERE e.dataDevolucao IS NULL", Long.class).getSingleResult();
     }
 
+    public Optional<Emprestimo> findById(Long id) {
+        //JOIN FETCH para carregar o livro junto
+        var query = entityManager.createQuery(
+                "SELECT e FROM Emprestimo e LEFT JOIN FETCH e.livro WHERE e.id = :id", Emprestimo.class);
+        query.setParameter("id", id);
+        return query.getResultStream().findFirst();
+    }
+
+    public void save(Emprestimo emprestimo) {
+        entityManager.persist(emprestimo);
+    }
+
+
+    public void deleteById(Long id) {
+        findById(id).ifPresent(entityManager::remove);
+    }
 }

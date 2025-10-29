@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+<h:head>
+    <title>Login - Biblioteca Digital</title>
+    <h:outputStylesheet name="css/style.css" />
+</h:head>
+<h:body>
+    <div class="container" style="max-width: 500px; margin-top: 50px;">
+        <header><h1>Login na Biblioteca</h1></header>
+        <div class="data-section">
+            <form action="j_security_check" method="post">
+                <h:panelGroup rendered="#{param.error eq 'true'}">
+                    <div class="faces-message faces-message-error">
+                        Usuário ou senha inválidos.
+                    </div>
+                </h:panelGroup>
+
+                <h:panelGrid columns="2" styleClass="form-grid">
+                    <h:outputLabel value="Usuário:" />
+                    <input type="text" name="j_username" class="form-input"/>
+
+                    <h:outputLabel value="Senha:" />
+                    <input type="password" name="j_password" class="form-input"/>
+                </h:panelGrid>
+
+                <div class="form-actions">
+                    <input type="submit" value="Entrar" class="button button-primary"/>
+                </div>
+            </form>
+            <div style="text-align: center; margin-top: 20px;">
+                <h:link outcome="/registro" value="Não tem uma conta? Crie uma aqui."/>
+            </div>
+        </div>
+    </div>
+</h:body>
+</html>

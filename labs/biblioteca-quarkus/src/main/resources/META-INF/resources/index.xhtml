@@ -127,9 +127,14 @@
 </h:head>
 <h:body>
     <div class="container">
+        <h:form rendered="#{userSessionBean.isLoggedIn()}" style="text-align: right; margin-bottom: 10px;">
+            <span>Olá, <strong>#{userSessionBean.username}</strong>!</span>
+            &#160; | &#160;
+            <h:commandLink value="Sair" action="#{userSessionBean.logout}" />
+        </h:form>
+
         <header>
             <h1>📚 Sistema de Biblioteca Digital</h1>
-            <p>Demonstração de Jakarta EE, Quarkus e Relacionamentos JPA</p>
         </header>
 
         <section class="stats-grid">

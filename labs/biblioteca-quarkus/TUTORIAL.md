@@ -297,6 +297,14 @@ mvn quarkus:dev
 
 E acessar no http://localhost:8080
 
+![img.png](img.png)
+
+![img_1.png](img_1.png)
+
+Demonstração da opção de sair e da função de mostrar o usuário logado
+
+![img_2.png](img_2.png)
+
 
 
 

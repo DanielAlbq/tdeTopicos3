@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+<h:head>
+    <title>Gerenciamento de Usuários</title>
+    <h:outputStylesheet name="css/style.css" />
+</h:head>
+
+<h:body>
+    <div class="container">
+        <header>
+            <h1>🔒 Gerenciamento de Usuários</h1>
+        </header>
+
+        <div class="data-section">
+            <h:form id="formUsuarios">
+                <p:growl id="messages" showDetail="true" />
+
+                <p:dataTable var="usuario" value="#{usuarioBean.usuarios}"
+                             editable="true" editMode="row"
+                             emptyMessage="Nenhum usuário encontrado.">
+
+                    <p:ajax event="rowEdit" listener="#{usuarioBean.onRowEdit}" update=":formUsuarios:messages" />
+                    <p:ajax event="rowEditCancel" listener="#{usuarioBean.onRowEditCancel}" update=":formUsuarios:messages" />
+
+                    <p:column headerText="ID" style="width:50px">
+                        <h:outputText value="#{usuario.id}" />
+                    </p:column>
+
+                    <p:column headerText="Nome de Usuário (Username)">
+                        <p:cellEditor>
+                            <f:facet name="output"><h:outputText value="#{usuario.username}" /></f:facet>
+                            <f:facet name="input"><p:inputText value="#{usuario.username}" style="width:100%"/></f:facet>
+                        </p:cellEditor>
+                    </p:column>
+
+                    <p:column headerText="Permissão (Role)" style="width:150px">
+                        <p:cellEditor>
+                            <f:facet name="output"><h:outputText value="#{usuario.role}" /></f:facet>
+                            <f:facet name="input">
+                                <h:selectOneMenu value="#{usuario.role}" style="width:100%">
+                                    <f:selectItems value="#{usuarioBean.roles}" />
+                                </h:selectOneMenu>
+                            </f:facet>
+                        </p:cellEditor>
+                    </p:column>
+
+                    <p:column style="width:100px; text-align: center;">
+                        <p:rowEditor editTitle="Editar" cancelTitle="Cancelar" saveTitle="Salvar" />
+                    </p:column>
+
+                </p:dataTable>
+
+                <div class="form-actions" style="text-align: left;">
+                    <h:link outcome="/index" value="Voltar para a Página Principal" styleClass="button button-secondary" />
+                </div>
+            </h:form>
+        </div>
+    </div>
+</h:body>
+</html>

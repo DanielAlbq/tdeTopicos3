@@ -24,4 +24,9 @@ public class UserSessionBean implements Serializable {
         FacesContext.getCurrentInstance().getExternalContext().invalidateSession();
         return "/login.xhtml?faces-redirect=true";
     }
+
+    public boolean hasRole(String role) {
+        FacesContext context = FacesContext.getCurrentInstance();
+        return context.getExternalContext().isUserInRole(role);
+    }
 }

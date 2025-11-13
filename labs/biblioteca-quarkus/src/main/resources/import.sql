@@ -1,4 +1,5 @@
-
+INSERT INTO usuarios(id, username, password, role) VALUES
+(1, 'admin', '$2a$12$maWIYEJziKTtkN/rCA4mmeiaWUKRUPfB3dAnDQCwnA8hw30auI4Ta', 'ADMIN');
 
 -- Inserção de Autores
 INSERT INTO autores(id, nome, email, data_nascimento, biografia) VALUES

@@ -131,6 +131,11 @@
             <span>Olá, <strong>#{userSessionBean.username}</strong>!</span>
             &#160; | &#160;
             <h:commandLink value="Sair" action="#{userSessionBean.logout}" />
+            <br/>
+            <br/>
+            <h:link value="Gerenciar Usuários" outcome="/admin/usuarios"
+                    rendered="#{userSessionBean.hasRole('ADMIN')}"
+                    styleClass="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" />
         </h:form>
 
         <header>
@@ -160,7 +165,7 @@
             <div class="data-section">
                 <h2>Autores Cadastrados</h2>
                 <div style="margin-bottom: 20px;">
-                    <h:link outcome="/autor" value="👤 Novo Autor" styleClass="button button-primary" />
+                    <h:link outcome="/autor" value="👤 Novo Autor" styleClass="button button-primary" rendered="#{userSessionBean.hasRole('ADMIN')}"/>
                 </div>
                 <p:dataTable var="autor" value="#{bibliotecaBean.autores}"
                              paginator="true" rows="10"
@@ -180,14 +185,14 @@
                         <h:outputText value="#{autor.livros.size()}" />
                     </p:column>
 
-                    <p:column headerText="Ações" style="text-align:center;">
-                        <h:link value="Editar" outcome="/autor" styleClass="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only">
+                    <p:column headerText="Ações" style="text-align:center;" rendered="#{userSessionBean.hasRole('ADMIN')}">
+                        <h:link value="Editar" outcome="/autor" styleClass="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" rendered="#{userSessionBean.hasRole('ADMIN')}">
                             <f:param name="id" value="#{autor.id}" />
                         </h:link>
 
                         &#160; <h:commandLink value="Excluir" action="#{bibliotecaBean.excluirAutor(autor.id)}"
                                               onclick="return confirm('Tem certeza?');"
-                                              styleClass="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only botao-excluir" />
+                                              styleClass="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only botao-excluir" rendered="#{userSessionBean.hasRole('ADMIN')}" />
                     </p:column>
                 </p:dataTable>
             </div>
@@ -195,7 +200,7 @@
             <div class="data-section">
                 <h2>Livros na Biblioteca</h2>
                 <div style="margin-bottom: 20px;">
-                    <h:link outcome="/livro" value="📚 Novo Livro" styleClass="button button-primary" />
+                    <h:link outcome="/livro" value="📚 Novo Livro" styleClass="button button-primary" rendered="#{userSessionBean.hasRole('ADMIN')}" />
                 </div>
                 <p:dataTable var="livro" value="#{bibliotecaBean.livros}"
                              paginator="true" rows="10"
@@ -221,12 +226,12 @@
                                       styleClass="#{livro.disponivel ? 'status-disponivel' : 'status-emprestado'}" />
                     </p:column>
 
-                    <p:column headerText="Ações" style="width:150px; text-align:center;">
-                        <h:link value="Editar" outcome="/livro" styleClass="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only">
+                    <p:column headerText="Ações" style="width:150px; text-align:center;" rendered="#{userSessionBean.hasRole('ADMIN')}"  >
+                        <h:link value="Editar" outcome="/livro" styleClass="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" rendered="#{userSessionBean.hasRole('ADMIN')}">
                             <f:param name="id" value="#{livro.id}" />
                         </h:link>
 
-                        &#160; <h:commandLink value="Excluir" action="#{bibliotecaBean.excluirLivro(livro.id)}"
+                        &#160; <h:commandLink value="Excluir" action="#{bibliotecaBean.excluirLivro(livro.id)}" rendered="#{userSessionBean.hasRole('ADMIN')}"
                                               onclick="return confirm('Tem certeza que deseja excluir este livro?');"
                                               styleClass="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only botao-excluir" />
                     </p:column>
@@ -238,7 +243,7 @@
                 <h2>Empréstimos Ativos</h2>
 
                 <div style="margin-bottom: 20px;">
-                    <h:link outcome="/emprestimo" value="🤝 Novo Empréstimo" styleClass="button button-primary" />
+                    <h:link outcome="/emprestimo" value="🤝 Novo Empréstimo" styleClass="button button-primary" rendered="#{userSessionBean.isLoggedIn()}"/>
                 </div>
 
                 <p:dataTable var="emprestimo" value="#{bibliotecaBean.emprestimosAtivos}"
@@ -268,10 +273,11 @@
                         </h:outputText>
                     </p:column>
 
-                    <p:column headerText="Ações" style="width:120px; text-align:center;">
+                    <p:column headerText="Ações" style="width:120px; text-align:center;" rendered="#{userSessionBean.hasRole('ADMIN')}">
                         <h:commandButton value="Devolver"
                                          action="#{bibliotecaBean.devolverLivro(emprestimo.id)}"
-                                         styleClass="button button-primary" />
+                                         styleClass="button button-primary"
+                                         rendered="#{userSessionBean.hasRole('ADMIN')}"/>
                     </p:column>
 
                 </p:dataTable>

@@ -56,3 +56,4 @@ Siga os passos abaixo para configurar e executar o projeto em sua máquina local
 Após realizar essas etapas acesse a aplicação via: http://localhost:8080
 
 As opções de design foram decididas visando um uso intuitivo e fácil, escolhida por ser uma interface com um design simples de fácil implementação.
+Senha para acesso do perfil admin: admin

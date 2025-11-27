@@ -140,4 +140,33 @@ public class BibliotecaService {
         // Atualiza o status do livro para disponível
         emprestimo.getLivro().setDisponivel(true);
     }
+
+    @Transactional
+    public void realizarEmprestimoRapido(Long livroId, String username) {
+        // 1. Busca o livro e verifica disponibilidade
+        Livro livro = livroRepository.findById(livroId)
+                .orElseThrow(() -> new IllegalArgumentException("Livro não encontrado."));
+
+        if (!livro.isDisponivel()) {
+            throw new IllegalStateException("Este livro já foi emprestado por outra pessoa.");
+        }
+
+        // 2. Cria o objeto Empréstimo automaticamente
+        Emprestimo emprestimo = new Emprestimo();
+        emprestimo.setLivro(livro);
+
+        // Como nossa tabela Usuario só tem 'username', usamos ele para nome e email
+        // Em um sistema real, buscaríamos os dados completos do usuário aqui.
+        emprestimo.setNomeUsuario(username);
+        emprestimo.setEmailUsuario(username); // Ou username + "@biblioteca.com"
+
+        emprestimo.setDataEmprestimo(LocalDate.now());
+        emprestimo.setDataDevolucaoPrevista(LocalDate.now().plusDays(14)); // Regra: 14 dias
+
+        // 3. Atualiza o status do livro
+        livro.setDisponivel(false);
+
+        // 4. Persiste
+        emprestimoRepository.save(emprestimo);
+    }
 }

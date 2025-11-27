@@ -13,6 +13,7 @@ import jakarta.inject.Inject;
 import jakarta.inject.Named;
 
 import java.io.Serializable;
+import java.security.Principal;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -128,5 +129,34 @@ public class BibliotecaBean implements Serializable {
             FacesContext.getCurrentInstance().addMessage(null,
                     new FacesMessage(FacesMessage.SEVERITY_ERROR, "Erro", e.getMessage()));
         }
+    }
+
+    public void emprestarParaMim(Long livroId) {
+        try {
+            // 1. Descobre quem está logado
+            Principal principal = FacesContext.getCurrentInstance().getExternalContext().getUserPrincipal();
+
+            if (principal == null) {
+                addMessage(FacesMessage.SEVERITY_ERROR, "Erro", "Você precisa estar logado para emprestar livros.");
+                return;
+            }
+
+            String username = principal.getName();
+
+            // 2. Chama o serviço
+            bibliotecaService.realizarEmprestimoRapido(livroId, username);
+
+            // 3. Atualiza a tela
+            carregarDados(); // Recarrega as listas para mostrar o livro como indisponível
+            addMessage(FacesMessage.SEVERITY_INFO, "Sucesso!", "Livro emprestado para " + username);
+
+        } catch (Exception e) {
+            addMessage(FacesMessage.SEVERITY_ERROR, "Erro", e.getMessage());
+        }
+    }
+
+    // Método auxiliar para mensagens (se você ainda não tiver)
+    private void addMessage(FacesMessage.Severity severity, String summary, String detail) {
+        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(severity, summary, detail));
     }
 }

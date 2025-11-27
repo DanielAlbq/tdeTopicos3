@@ -226,14 +226,35 @@
                                       styleClass="#{livro.disponivel ? 'status-disponivel' : 'status-emprestado'}" />
                     </p:column>
 
-                    <p:column headerText="Ações" style="width:150px; text-align:center;" rendered="#{userSessionBean.hasRole('ADMIN')}"  >
-                        <h:link value="Editar" outcome="/livro" styleClass="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" rendered="#{userSessionBean.hasRole('ADMIN')}">
-                            <f:param name="id" value="#{livro.id}" />
-                        </h:link>
+                    <p:column headerText="Ações" style="width:200px; text-align:center;">
 
-                        &#160; <h:commandLink value="Excluir" action="#{bibliotecaBean.excluirLivro(livro.id)}" rendered="#{userSessionBean.hasRole('ADMIN')}"
-                                              onclick="return confirm('Tem certeza que deseja excluir este livro?');"
-                                              styleClass="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only botao-excluir" />
+                        <!-- BOTÃO DE EMPRÉSTIMO RÁPIDO (A novidade) -->
+                        <!-- Só aparece se o livro estiver disponível E o usuário for USER -->
+                        <h:commandButton value="📖 Emprestar"
+                                         action="#{bibliotecaBean.emprestarParaMim(livro.id)}"
+                                         rendered="#{livro.disponivel and userSessionBean.hasRole('USER')}"
+                                         styleClass="button button-primary"
+                                         style="background-color: #28a745; margin-right: 5px;">
+                        </h:commandButton>
+
+                        <!-- Botões de Admin (Editar/Excluir) - Mantidos como estavam -->
+                        <h:panelGroup rendered="#{userSessionBean.hasRole('ADMIN')}">
+                            <h:link value="Editar" outcome="/livro" styleClass="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only">
+                                <f:param name="id" value="#{livro.id}" />
+                            </h:link>
+
+                            &#160;
+
+                            <h:commandLink value="Excluir" action="#{bibliotecaBean.excluirLivro(livro.id)}"
+                                           onclick="return confirm('Tem certeza?');"
+                                           styleClass="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only botao-excluir" />
+                        </h:panelGroup>
+
+                        <!-- Texto informativo se o livro estiver indisponível -->
+                        <h:outputText value="Indisponível"
+                                      rendered="#{!livro.disponivel}"
+                                      style="font-style: italic; color: #999;" />
+
                     </p:column>
 
                 </p:dataTable>
@@ -243,7 +264,7 @@
                 <h2>Empréstimos Ativos</h2>
 
                 <div style="margin-bottom: 20px;">
-                    <h:link outcome="/emprestimo" value="🤝 Novo Empréstimo" styleClass="button button-primary" rendered="#{userSessionBean.isLoggedIn()}"/>
+                    <h:link outcome="/emprestimo" value="🤝 Novo Empréstimo" styleClass="button button-primary" rendered="#{userSessionBean.hasRole('ADMIN')}"/>
                 </div>
 
                 <p:dataTable var="emprestimo" value="#{bibliotecaBean.emprestimosAtivos}"
